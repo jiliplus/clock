@@ -7,7 +7,7 @@
 <!--  -->
 <a href="https://www.travis-ci.org/jujili/clock"><img src="https://www.travis-ci.org/jujili/clock.svg?branch=master"/></a>
 <!--  -->
-<a href="https://codecov.io/gh/aQuaYi/jili"><img src="https://codecov.io/gh/aQuaYi/jili/branch/master/graph/badge.svg"/></a>
+<a href="https://codecov.io/gh/jujili/clock"><img src="https://codecov.io/gh/jujili/clock/branch/master/graph/badge.svg"/></a>
 <!--  -->
 <a href="https://goreportcard.com/report/github.com/aQuaYi/jili"><img src="https://goreportcard.com/badge/github.com/aQuaYi/jili" alt="Go Report Card" title="Go Report Card"/></a>
 <!--  -->
