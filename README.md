@@ -1,8 +1,6 @@
-# :alarm_clock: Clock
-
 <!-- markdownlint-disable MD041 -->
-
-<p align="left">
+<h1 align="center">:alarm_clock: Clock</h1>
+<p align="center">
 <!--  -->
 <a href="https://github.com/jujili/clock/releases"> <img src="https://img.shields.io/github/v/tag/jujili/clock?include_prereleases&sort=semver" alt="Release" title="Release"></a>
 <!--  -->
@@ -16,9 +14,7 @@
 <!--  -->
 <br/>
 <!--  -->
-<a href="https://github.com/aQuaYi/jili/blob/master/docs/CHANGELOG.md"><img src="https://img.shields.io/badge/Change-Log-blueviolet.svg" alt="Change Log" title="Change Log"/></a>
-<!--  -->
-<a href="https://github.com/aQuaYi/jili/blob/master/docs/DIARY.md"><img src="https://img.shields.io/badge/Dev-Diary-blue.svg" alt="Developer Diary" title="Developer Diary"/></a>
+<a href="https://github.com/jujili/clock/blob/master/CHANGELOG.md"><img src="https://img.shields.io/badge/Change-Log-blueviolet.svg" alt="Change Log" title="Change Log"/></a>
 <!--  -->
 <a href="https://golang.google.cn"><img src="https://img.shields.io/github/go-mod/go-version/jujili/clock" alt="Go Version" title="Go Version"/></a>
 <!--  -->
