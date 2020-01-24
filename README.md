@@ -30,7 +30,7 @@
 <!--  -->
 </p>
 
-clock 中的 `realClock` 和 `simulator` 结构体，都实现了 `clock.Clock` 接口。可以在需要实际时间的时候，使用前者；在需要人为地操纵时间流逝的场合（比如：测试）中，使用后者。
+clock 中的 `realClock` 和 `simulator` 结构体，都实现了 `clock.Clock` 接口。需要实际时间时，使用前者；需要人为地操纵时间的场合（比如：测试）中，使用后者。
 
 - [总体思路](#%e6%80%bb%e4%bd%93%e6%80%9d%e8%b7%af)
 - [真实的 Clock](#%e7%9c%9f%e5%ae%9e%e7%9a%84-clock)
