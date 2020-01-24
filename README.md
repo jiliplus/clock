@@ -30,6 +30,9 @@
 <!--  -->
 </p>
 
+`clock` 首先把 Go `time` 标准库中的与`当前时间`相关的函数，汇集了成了 `clock.Clock` 接口。然后，通过 `realClock` 结构体，封装 `time` 标准库中的相关函数，实现了 `clock.Clock` 接口。另一方面，通过 `simulator` 结构体来模拟时钟，也实现了 `clock.Clock` 接口。并提供了驱动 `simulator` 运行的 `updatable` 接口。
+在实际运行中，使用 `realClock` 对象；在测试或其他需要的场合，使用 `simulator` 对象。
+
 - [总体思路](#%e6%80%bb%e4%bd%93%e6%80%9d%e8%b7%af)
 - [真实的 Clock](#%e7%9c%9f%e5%ae%9e%e7%9a%84-clock)
 - [虚拟的 Clock](#%e8%99%9a%e6%8b%9f%e7%9a%84-clock)
