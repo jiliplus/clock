@@ -10,9 +10,9 @@ ADD:
 
 - 添加了 `tools.IsExist` 函数，判断文件是否存在
 
-<!-- [Unreleased]: https://github.com/aQuaYi/jili/compare/v1.0.0...HEAD -->
+<!-- ## [未发布更改]: https://github.com/jujili/clock/compare/v1.0.0...HEAD -->
 
 ## [0.0.1]
 
-[最新更改]: https://github.com/aQuaYi/jili
-[0.0.1]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.0.0...v0.0.1
+[最新更改]: https://github.com/jujili/clock
+[0.0.1]: https://github.com/jujili/clock/compare/v0.0.0...v0.0.1
