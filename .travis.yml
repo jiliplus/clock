@@ -12,7 +12,7 @@ branches:
 script:
   - go get -t -v ./...
   - go vet ./...
-  - bash ./scripts/travis.sh
+  - bash ./.travis.sh
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
