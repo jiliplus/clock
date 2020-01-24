@@ -12,7 +12,7 @@
 <!--  -->
 <a href="https://goreportcard.com/report/github.com/jujili/clock"><img src="https://goreportcard.com/badge/github.com/jujili/clock" alt="Go Report Card" title="Go Report Card"/></a>
 <!--  -->
-<a href="http://godoc.org/github.com/aQuaYi/jili"><img src="https://img.shields.io/badge/godoc-reference-blue.svg" alt="Go Doc" title="Go Doc"/></a>
+<a href="http://godoc.org/github.com/jujili/clock"><img src="https://img.shields.io/badge/godoc-clock-blue.svg" alt="Go Doc" title="Go Doc"/></a>
 <!--  -->
 <br/>
 <!--  -->
