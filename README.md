@@ -1,9 +1,10 @@
 # :alarm_clock: Clock
+
 <!-- markdownlint-disable MD041 -->
 
 <p align="left">
 <!--  -->
-<a href="https://github.com/jujili/clock/releases"> <img src="https://img.shields.io/github/v/release/jujili/clock?include_prereleases" alt="Release" title="Release"></a>
+<a href="https://github.com/jujili/clock/releases"> <img src="https://img.shields.io/github/v/tag/jujili/clock?include_prereleases&sort=semver" alt="Release" title="Release"></a>
 <!--  -->
 <a href="https://www.travis-ci.org/jujili/clock"><img src="https://www.travis-ci.org/jujili/clock.svg?branch=master"/></a>
 <!--  -->
