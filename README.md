@@ -1,11 +1,11 @@
-# :alarm_clock: Clock 模块
+# :alarm_clock: Clock
 <!-- markdownlint-disable MD041 -->
 
 <p align="left">
 <!--  -->
 <a href="https://github.com/jujili/clock/releases"> <img src="https://img.shields.io/github/v/release/jujili/clock?include_prereleases" alt="Release" title="Release"></a>
 <!--  -->
-<a href="https://www.travis-ci.org/aQuaYi/jili"><img src="https://www.travis-ci.org/aQuaYi/jili.svg?branch=master"/></a>
+<a href="https://www.travis-ci.org/jujili/clock"><img src="https://www.travis-ci.org/jujili/clock.svg?branch=master"/></a>
 <!--  -->
 <a href="https://codecov.io/gh/aQuaYi/jili"><img src="https://codecov.io/gh/aQuaYi/jili/branch/master/graph/badge.svg"/></a>
 <!--  -->
