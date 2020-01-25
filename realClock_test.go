@@ -60,7 +60,7 @@ func Test_realClock_AfterFunc(t *testing.T) {
 				})
 			})
 		})
-		SkipConvey("等待一段时间后", func() {
+		Convey("等待一段时间后", func() {
 			time.Sleep(second)
 			Convey("func 已执行，此时可以解锁", func() {
 				So(func() {
