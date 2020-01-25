@@ -5,22 +5,22 @@ import (
 	"time"
 )
 
-type mockCtx struct {
+type contextSim struct {
 	context.Context
 	deadline time.Time
 	done     chan struct{}
 	err      error
 }
 
-func (ctx *mockCtx) Deadline() (time.Time, bool) {
+func (ctx *contextSim) Deadline() (time.Time, bool) {
 	return ctx.deadline, true
 }
 
-func (ctx *mockCtx) Done() <-chan struct{} {
+func (ctx *contextSim) Done() <-chan struct{} {
 	return ctx.done
 }
 
-func (ctx *mockCtx) Err() error {
+func (ctx *contextSim) Err() error {
 	select {
 	case <-ctx.done:
 		return ctx.err

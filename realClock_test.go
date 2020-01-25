@@ -75,7 +75,7 @@ func Test_realClock_Now(t *testing.T) {
 	Convey("新建一个 realClock", t, func() {
 		c := NewRealClock()
 		Convey("realClock.Now() 和 time.Now() 应该返回差不多的时间", func() {
-			delta := time.Microsecond
+			delta := 10 * time.Microsecond
 			So(c.Now(), ShouldHappenWithin, delta, time.Now())
 		})
 	})

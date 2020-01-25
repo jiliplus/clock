@@ -161,7 +161,7 @@ func (m *Mock) contextWithDeadline(parent context.Context, deadline time.Time) (
 		return cancelCtx, cancel
 	}
 	// TODO: 把以下代码放入 newMockContext
-	ctx := &mockCtx{
+	ctx := &contextSim{
 		Context:  cancelCtx,
 		done:     make(chan struct{}),
 		deadline: deadline,
