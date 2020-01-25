@@ -169,7 +169,7 @@ func Test_Simulator_Move(t *testing.T) {
 			expectDur := time.Second
 			expectTime := s.now.Add(expectDur)
 			runTask := func(ts *task) *task { return nil }
-			ts := newTask2(expectTime, runTask)
+			ts := newTask(expectTime, runTask)
 			s.accept(ts)
 			Convey("让 s Move 一下，会发生改变", func() {
 				actualTime, actualDur := s.Move()
@@ -193,7 +193,7 @@ func Test_Simulator_set_timerStyle(t *testing.T) {
 		}
 		for i := num; i > 0; i-- {
 			deadline := now.Add(time.Duration(i) * time.Second)
-			ts := newTask2(deadline, runTask)
+			ts := newTask(deadline, runTask)
 			s.accept(ts)
 			expectOrder[i-1] = deadline
 		}
@@ -227,7 +227,7 @@ func Test_Simulator_set_tickerStyle(t *testing.T) {
 			return ts
 		}
 		deadline := now.Add(time.Second)
-		ts := newTask2(deadline, runTask)
+		ts := newTask(deadline, runTask)
 		s.accept(ts)
 		Convey("s.heap 的长度应该等于 1", func() {
 			So(len(*(s.heap)), ShouldEqual, 1)

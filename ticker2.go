@@ -51,7 +51,7 @@ func (s *Simulator) newTicker(d time.Duration) *Ticker {
 	}
 	t := &Ticker{
 		C:    c,
-		task: newTask2(s.now.Add(d), run),
+		task: newTask(s.now.Add(d), run),
 	}
 	t.Stop = func() {
 		if t.ticker != nil {

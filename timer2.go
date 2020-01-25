@@ -74,7 +74,7 @@ func (s *Simulator) newTimerFunc(deadline time.Time, afterFunc func()) *Timer {
 	}
 	t := &Timer{
 		C:    c,
-		task: newTask2(deadline, runTask),
+		task: newTask(deadline, runTask),
 	}
 	s.accept(t.task)
 	t.Stop = func() bool {
