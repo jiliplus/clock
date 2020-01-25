@@ -78,9 +78,6 @@ func (s *Simulator) newTimerFunc(deadline time.Time, afterFunc func()) *Timer {
 	}
 	s.accept(t.task)
 	t.Stop = func() bool {
-		if t.timer != nil {
-			return t.timer.Stop()
-		}
 		s.Lock()
 		defer s.Unlock()
 		isActive := !t.task.hasStopped()
@@ -88,9 +85,6 @@ func (s *Simulator) newTimerFunc(deadline time.Time, afterFunc func()) *Timer {
 		return isActive
 	}
 	t.Reset = func(d time.Duration) bool {
-		if t.timer != nil {
-			return t.timer.Reset(d)
-		}
 		s.Lock()
 		defer s.Unlock()
 		isActive := !t.hasStopped()

@@ -54,10 +54,6 @@ func (s *Simulator) newTicker(d time.Duration) *Ticker {
 		task: newTask(s.now.Add(d), run),
 	}
 	t.Stop = func() {
-		if t.ticker != nil {
-			t.ticker.Stop()
-			return
-		}
 		s.Lock()
 		s.heap.remove(t.task)
 		s.Unlock()
