@@ -18,7 +18,13 @@ func (realClock) After(d time.Duration) <-chan time.Time {
 }
 
 func (realClock) AfterFunc(d time.Duration, f func()) *Timer {
-	return &Timer{timer: time.AfterFunc(d, f)}
+	// TODO: 封装这个内容
+	realTimer := time.AfterFunc(d, f)
+	return &Timer{
+		timer: time.AfterFunc(d, f),
+		Stop:  realTimer.Stop,
+		Reset: realTimer.Reset,
+	}
 }
 
 func (realClock) NewTicker(d time.Duration) *Ticker {

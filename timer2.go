@@ -2,9 +2,9 @@ package clock
 
 import "time"
 
-// Timer2 替代 time.Timer.
+// Timer 替代 time.Timer.
 // TODO: 修改名称为 Timer
-type Timer2 struct {
+type Timer struct {
 	C <-chan time.Time
 	// 当 timer != nil 的时候, Timer 代表了 real clock
 	timer *time.Timer
@@ -39,7 +39,7 @@ func (s *Simulator) After(d time.Duration) <-chan time.Time {
 // It returns a Timer that can be used to cancel the call using its Stop method.
 //
 // A negative or zero duration fires the timer immediately.
-func (s *Simulator) AfterFunc(d time.Duration, f func()) *Timer2 {
+func (s *Simulator) AfterFunc(d time.Duration, f func()) *Timer {
 	s.Lock()
 	defer s.Unlock()
 	return s.newTimerFunc(s.now.Add(d), f)
@@ -49,14 +49,14 @@ func (s *Simulator) AfterFunc(d time.Duration, f func()) *Timer2 {
 // after at least duration d.
 //
 // A negative or zero duration fires the timer immediately.
-func (s *Simulator) NewTimer(d time.Duration) *Timer2 {
+func (s *Simulator) NewTimer(d time.Duration) *Timer {
 	s.Lock()
 	defer s.Unlock()
 	return s.newTimerFunc(s.now.Add(d), nil)
 }
 
 //
-func (s *Simulator) newTimerFunc(deadline time.Time, afterFunc func()) *Timer2 {
+func (s *Simulator) newTimerFunc(deadline time.Time, afterFunc func()) *Timer {
 	c := make(chan time.Time, 1)
 	runTask := func(t *task) *task {
 		if afterFunc != nil {
@@ -72,7 +72,7 @@ func (s *Simulator) newTimerFunc(deadline time.Time, afterFunc func()) *Timer2 {
 		}
 		return nil
 	}
-	t := &Timer2{
+	t := &Timer{
 		C:    c,
 		task: newTask2(deadline, runTask),
 	}

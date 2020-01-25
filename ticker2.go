@@ -4,8 +4,8 @@ import (
 	"time"
 )
 
-// Ticker2 represents a time.Ticker.
-type Ticker2 struct {
+// Ticker represents a time.Ticker.
+type Ticker struct {
 	C    <-chan time.Time
 	Stop func()
 	// 当 ticker != nil 的时候, Ticker 代表了 real clock
@@ -15,7 +15,7 @@ type Ticker2 struct {
 
 // NewTicker returns a new Ticker containing a channel that will send the
 // current time with a period specified by the duration d.
-func (s *Simulator) NewTicker(d time.Duration) *Ticker2 {
+func (s *Simulator) NewTicker(d time.Duration) *Ticker {
 	s.Lock()
 	defer s.Unlock()
 	if d <= 0 {
@@ -35,7 +35,7 @@ func (s *Simulator) Tick(d time.Duration) <-chan time.Time {
 	return s.newTicker(d).C
 }
 
-func (s *Simulator) newTicker(d time.Duration) *Ticker2 {
+func (s *Simulator) newTicker(d time.Duration) *Ticker {
 	c := make(chan time.Time, 1)
 	run := func(t *task) *task {
 		// time.Tick.C 的发送逻辑是
@@ -49,7 +49,7 @@ func (s *Simulator) newTicker(d time.Duration) *Ticker2 {
 		t.deadline = t.deadline.Add(d)
 		return t
 	}
-	t := &Ticker2{
+	t := &Ticker{
 		C:    c,
 		task: newTask2(s.now.Add(d), run),
 	}

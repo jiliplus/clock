@@ -1,6 +1,7 @@
 package clock
 
 import (
+	"context"
 	"runtime"
 	"sync"
 	"time"
@@ -121,43 +122,43 @@ func (s *Simulator) Until(t time.Time) time.Duration {
 	return t.Sub(s.now)
 }
 
-// // ContextWithDeadline implements Clock.
-// func (s *Simulator) ContextWithDeadline(parent context.Context, d time.Time) (context.Context, context.CancelFunc) {
-// 	s.Lock()
-// 	defer s.Unlock()
-// 	return s.contextWithDeadline(parent, d)
-// }
+// ContextWithDeadline implements Clock.
+func (s *Simulator) ContextWithDeadline(parent context.Context, d time.Time) (context.Context, context.CancelFunc) {
+	s.Lock()
+	defer s.Unlock()
+	return s.contextWithDeadline(parent, d)
+}
 
-// // ContextWithTimeout implements Clock.
-// func (s *Simulator) ContextWithTimeout(parent context.Context, timeout time.Duration) (context.Context, context.CancelFunc) {
-// 	s.Lock()
-// 	defer s.Unlock()
-// 	return s.contextWithDeadline(parent, s.now.Add(timeout))
-// }
-// func (s *Simulator) contextWithDeadline(parent context.Context, deadline time.Time) (context.Context, context.CancelFunc) {
-// 	cancelCtx, cancel := context.WithCancel(Set(parent, s))
-// 	if pd, ok := parent.Deadline(); ok && !pd.After(deadline) {
-// 		return cancelCtx, cancel
-// 	}
-// 	// TODO: 把以下代码放入 newMockContext
-// 	ctx := &mockCtx{
-// 		Context:  cancelCtx,
-// 		done:     make(chan struct{}),
-// 		deadline: deadline,
-// 	}
-// 	t := s.newTimerFunc(deadline, nil)
-// 	go func() {
-// 		select {
-// 		case <-t.C:
-// 			ctx.err = context.DeadlineExceeded
-// 		case <-cancelCtx.Done():
-// 			ctx.err = cancelCtx.Err()
-// 			defer t.Stop()
-// 		}
-// 		close(ctx.done)
-// 	}()
-// 	return ctx, cancel
-// }
+// ContextWithTimeout implements Clock.
+func (s *Simulator) ContextWithTimeout(parent context.Context, timeout time.Duration) (context.Context, context.CancelFunc) {
+	s.Lock()
+	defer s.Unlock()
+	return s.contextWithDeadline(parent, s.now.Add(timeout))
+}
+func (s *Simulator) contextWithDeadline(parent context.Context, deadline time.Time) (context.Context, context.CancelFunc) {
+	cancelCtx, cancel := context.WithCancel(Set(parent, s))
+	if pd, ok := parent.Deadline(); ok && !pd.After(deadline) {
+		return cancelCtx, cancel
+	}
+	// TODO: 把以下代码放入 newMockContext
+	ctx := &contextSim{
+		Context:  cancelCtx,
+		done:     make(chan struct{}),
+		deadline: deadline,
+	}
+	t := s.newTimerFunc(deadline, nil)
+	go func() {
+		select {
+		case <-t.C:
+			ctx.err = context.DeadlineExceeded
+		case <-cancelCtx.Done():
+			ctx.err = cancelCtx.Err()
+			defer t.Stop()
+		}
+		close(ctx.done)
+	}()
+	return ctx, cancel
+}
 
 // set 是 Simulator 的核心逻辑，
 // 把 now 时间点之前需要完成的任务，由早到晚依次触发。

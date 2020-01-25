@@ -24,7 +24,7 @@ type task struct {
 	// TODO: 删除此处内容
 	// task 不必包含 mock 的内容。
 	// 由 mock 驱动 heap 的时候，丢弃 !isActive 的 task 就好了。
-	mock *Mock
+	// mock *Mock
 	// tick 或 timer
 	// 在 Stop 之前，isStopped = true
 	// 在 Stop 之后，isStopped = false
@@ -36,6 +36,7 @@ type task struct {
 
 const removed = -1
 
+// TODO: 修改名称到 newTask
 func newTask2(deadline time.Time, runTask func(t *task) *task) *task {
 	return &task{
 		deadline: deadline,
@@ -44,13 +45,13 @@ func newTask2(deadline time.Time, runTask func(t *task) *task) *task {
 	}
 }
 
-func newTask(m *Mock, d time.Time) *task {
-	return &task{
-		deadline: d,
-		mock:     m,
-		index:    removed,
-	}
-}
+// func newTask(m *Mock, d time.Time) *task {
+// 	return &task{
+// 		deadline: d,
+// 		mock:     m,
+// 		index: removed,
+// 	}
+// }
 
 func (t *task) run() *task {
 	return t.runTask(t)
@@ -60,34 +61,34 @@ func (t task) hasStopped() bool {
 	return t.index == removed
 }
 
-// TODO: 删除此处内容
-func (h *taskHeap) start(t *task) {
-	heap.Push(h, t)
-}
+// // TODO: 删除此处内容
+// func (h *taskHeap) start(t *task) {
+// 	heap.Push(h, t)
+// }
 
-// TODO: 删除此处内容
-func (h *taskHeap) stop(t *task) {
-	if !t.hasStopped() {
-		heap.Remove(h, t.index)
-	}
-}
+// // TODO: 删除此处内容
+// func (h *taskHeap) stop(t *task) {
+// 	if !t.hasStopped() {
+// 		heap.Remove(h, t.index)
+// 	}
+// }
 
-// TODO: 删除此处内容
-func (h *taskHeap) reset(t *task) {
-	if !t.hasStopped() {
-		heap.Fix(h, t.index)
-	} else {
-		heap.Push(h, t)
-	}
-}
+// // TODO: 删除此处内容
+// func (h *taskHeap) reset(t *task) {
+// 	if !t.hasStopped() {
+// 		heap.Fix(h, t.index)
+// 	} else {
+// 		heap.Push(h, t)
+// 	}
+// }
 
-// TODO: 删除此处内容
-func (h taskHeap) next() *task {
-	if len(h) == 0 {
-		return nil
-	}
-	return h[0]
-}
+// // TODO: 删除此处内容
+// func (h taskHeap) next() *task {
+// 	if len(h) == 0 {
+// 		return nil
+// 	}
+// 	return h[0]
+// }
 
 type taskHeap []*task
 
@@ -106,10 +107,10 @@ func (h *taskHeap) pop() (t *task) {
 	return
 }
 
-// TODO: 删除此处内容
-func (h taskHeap) hasTaskToRun(now time.Time) bool {
-	return len(h) != 0 && !now.Before(h[0].deadline)
-}
+// // TODO: 删除此处内容
+// func (h taskHeap) hasTaskToRun(now time.Time) bool {
+// 	return len(h) != 0 && !now.Before(h[0].deadline)
+// }
 
 func (h taskHeap) hasExpiredTask(now time.Time) bool {
 	return len(h) != 0 && !now.Before(h[0].deadline)
@@ -125,10 +126,10 @@ func (h *taskHeap) remove(t *task) {
 	}
 }
 
-// TODO: 删除此处内容
-func (h taskHeap) hasNext() bool {
-	return len(h) != 0
-}
+// // TODO: 删除此处内容
+// func (h taskHeap) hasNext() bool {
+// 	return len(h) != 0
+// }
 
 // *taskHeap 实现了 heap.Interface
 func (h taskHeap) Len() int { return len(h) }

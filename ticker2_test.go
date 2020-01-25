@@ -16,7 +16,7 @@ func Test_Simulator_NewTicker(t *testing.T) {
 			}, ShouldPanicWith, "non-positive interval for NewTicker")
 		})
 		Convey("创建正时间的 Ticker 会返回 *Ticker 类型 ", func() {
-			So(s.NewTicker(time.Second), ShouldHaveSameTypeAs, &Ticker2{})
+			So(s.NewTicker(time.Second), ShouldHaveSameTypeAs, &Ticker{})
 		})
 	})
 }
