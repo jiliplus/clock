@@ -1,6 +1,7 @@
 package clock
 
 import (
+	"context"
 	"fmt"
 	"sync"
 	"testing"
@@ -71,6 +72,28 @@ func Test_realClock_AfterFunc(t *testing.T) {
 	})
 }
 
+func Test_realClock_NewTicker(t *testing.T) {
+	Convey("利用 realClock 创建 ticker", t, func() {
+		c := NewRealClock()
+		t := c.NewTicker(time.Second)
+		Convey("应该是对 time.Ticker 的封装", func() {
+			So(t.Stop, ShouldEqual, t.ticker.Stop)
+		})
+	})
+}
+
+func Test_realClock_NewTimer(t *testing.T) {
+	Convey("利用 realClock 创建 timer", t, func() {
+		c := NewRealClock()
+		t := c.NewTimer(time.Second)
+		Convey("应该是对 time.Timer 的封装", func() {
+			So(t.C, ShouldEqual, t.timer.C)
+			So(t.Reset, ShouldEqual, t.timer.Reset)
+			So(t.Stop, ShouldEqual, t.timer.Stop)
+		})
+	})
+}
+
 func Test_realClock_Now(t *testing.T) {
 	Convey("新建一个 realClock", t, func() {
 		c := NewRealClock()
@@ -104,7 +127,19 @@ func Test_realClock_Sleep(t *testing.T) {
 		Convey("起止时间，应该差不多就相差了一个 dur", func() {
 			So(end, ShouldHappenWithin, dur+delta, start)
 		})
-		fmt.Println(c.Now())
+	})
+}
+
+func Test_realClock_Tick(t *testing.T) {
+	Convey("新建一个 realClock", t, func() {
+		c := NewRealClock()
+		dur := time.Millisecond * 10
+		delta := time.Millisecond / 2
+		start := time.Now()
+		end := <-c.Tick(dur)
+		Convey("起止时间，应该差不多就相差了一个 dur", func() {
+			So(end, ShouldHappenWithin, dur+delta, start)
+		})
 	})
 }
 
@@ -116,6 +151,36 @@ func Test_realClock_Until(t *testing.T) {
 		actual := c.Until(oneSecondAfter)
 		Convey("realClock.Since 应该返回 1 秒钟", func() {
 			So(actual, ShouldAlmostEqual, expected, time.Millisecond)
+		})
+	})
+}
+
+func Test_realClock_ContextWithDeadline(t *testing.T) {
+	Convey("利用 realClock 创建 context", t, func() {
+		c := NewRealClock()
+		dur := time.Millisecond * 200
+		delta := time.Millisecond / 2
+		deadline := time.Now().Add(dur)
+		ctx, _ := c.ContextWithDeadline(context.Background(), deadline)
+		<-ctx.Done()
+		endTime := time.Now()
+		Convey("应该大约在预定的时间内完成", func() {
+			So(endTime, ShouldHappenWithin, delta, deadline)
+		})
+	})
+}
+
+func Test_realClock_ContextWithTimeout(t *testing.T) {
+	Convey("利用 realClock 创建 context", t, func() {
+		c := NewRealClock()
+		timeout := time.Millisecond * 200
+		delta := time.Millisecond / 2
+		deadline := time.Now().Add(timeout)
+		ctx, _ := c.ContextWithTimeout(context.Background(), timeout)
+		<-ctx.Done()
+		endTime := time.Now()
+		Convey("应该大约在预定的时间内完成", func() {
+			So(endTime, ShouldHappenWithin, delta, deadline)
 		})
 	})
 }

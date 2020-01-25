@@ -60,21 +60,15 @@ func (realClock) Sleep(d time.Duration) {
 }
 
 func (realClock) Tick(d time.Duration) <-chan time.Time {
-	// 删除以下内容时为了让 Tick 的逻辑与 time.Tick 中的一致
-	// if d <= 0 {
-	// return nil
-	// }
-	// TODO: 把以下内容放入 mockTicker.Tick 中
-	// panic(errors.New("non-positive interval for NewTicker"))
-	return time.NewTicker(d).C
+	return time.Tick(d)
 }
 
 func (realClock) Until(t time.Time) time.Duration {
 	return time.Until(t)
 }
 
-func (realClock) ContextWithDeadline(parent context.Context, d time.Time) (context.Context, context.CancelFunc) {
-	return context.WithDeadline(parent, d)
+func (realClock) ContextWithDeadline(parent context.Context, deadline time.Time) (context.Context, context.CancelFunc) {
+	return context.WithDeadline(parent, deadline)
 }
 
 func (realClock) ContextWithTimeout(parent context.Context, timeout time.Duration) (context.Context, context.CancelFunc) {
