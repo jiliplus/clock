@@ -123,40 +123,29 @@ func (s *Simulator) Until(t time.Time) time.Duration {
 }
 
 // ContextWithDeadline implements Clock.
-func (s *Simulator) ContextWithDeadline(parent context.Context, d time.Time) (context.Context, context.CancelFunc) {
+// NOTICE: 在程序中，不要混用 realClock 和 simulator
+func (s *Simulator) ContextWithDeadline(parent context.Context, deadline time.Time) (context.Context, context.CancelFunc) {
 	s.Lock()
 	defer s.Unlock()
-	return s.contextWithDeadline(parent, d)
+	return s.contextWithDeadline(parent, deadline)
 }
 
 // ContextWithTimeout implements Clock.
+// NOTICE: 在程序中，不要混用 realClock 和 simulator
 func (s *Simulator) ContextWithTimeout(parent context.Context, timeout time.Duration) (context.Context, context.CancelFunc) {
 	s.Lock()
 	defer s.Unlock()
 	return s.contextWithDeadline(parent, s.now.Add(timeout))
 }
+
 func (s *Simulator) contextWithDeadline(parent context.Context, deadline time.Time) (context.Context, context.CancelFunc) {
-	cancelCtx, cancel := context.WithCancel(Set(parent, s))
-	if pd, ok := parent.Deadline(); ok && !pd.After(deadline) {
-		return cancelCtx, cancel
+	child, cancel := context.WithCancel(Set(parent, s))
+	pd, ok := parent.Deadline()
+	pdEqualOrBeforeDeadline := !pd.After(deadline)
+	if ok && pdEqualOrBeforeDeadline {
+		return child, cancel
 	}
-	// TODO: 把以下代码放入 newMockContext
-	ctx := &contextSim{
-		Context:  cancelCtx,
-		done:     make(chan struct{}),
-		deadline: deadline,
-	}
-	t := s.newTimerFunc(deadline, nil)
-	go func() {
-		select {
-		case <-t.C:
-			ctx.err = context.DeadlineExceeded
-		case <-cancelCtx.Done():
-			ctx.err = cancelCtx.Err()
-			defer t.Stop()
-		}
-		close(ctx.done)
-	}()
+	ctx := s.newContextSim(child, deadline)
 	return ctx, cancel
 }
 

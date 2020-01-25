@@ -2,7 +2,6 @@ package clock
 
 import (
 	"context"
-	"fmt"
 	"sync"
 	"testing"
 	"time"
@@ -159,7 +158,7 @@ func Test_realClock_ContextWithDeadline(t *testing.T) {
 	Convey("利用 realClock 创建 context", t, func() {
 		c := NewRealClock()
 		dur := time.Millisecond * 200
-		delta := time.Millisecond / 2
+		delta := time.Millisecond
 		deadline := time.Now().Add(dur)
 		ctx, _ := c.ContextWithDeadline(context.Background(), deadline)
 		<-ctx.Done()
@@ -174,7 +173,7 @@ func Test_realClock_ContextWithTimeout(t *testing.T) {
 	Convey("利用 realClock 创建 context", t, func() {
 		c := NewRealClock()
 		timeout := time.Millisecond * 200
-		delta := time.Millisecond / 2
+		delta := time.Millisecond
 		deadline := time.Now().Add(timeout)
 		ctx, _ := c.ContextWithTimeout(context.Background(), timeout)
 		<-ctx.Done()
@@ -182,12 +181,5 @@ func Test_realClock_ContextWithTimeout(t *testing.T) {
 		Convey("应该大约在预定的时间内完成", func() {
 			So(endTime, ShouldHappenWithin, delta, deadline)
 		})
-	})
-}
-
-func Test_realClock_x(t *testing.T) {
-	Convey("新建一个 realClock", t, func() {
-		c := NewRealClock()
-		fmt.Println(c.Now())
 	})
 }

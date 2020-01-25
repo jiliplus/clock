@@ -3,7 +3,6 @@ package clock
 import "time"
 
 // Timer 替代 time.Timer.
-// TODO: 修改名称为 Timer
 type Timer struct {
 	C <-chan time.Time
 	// 当 timer != nil 的时候, Timer 代表了 real clock

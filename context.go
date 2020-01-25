@@ -12,6 +12,26 @@ type contextSim struct {
 	err      error
 }
 
+func (s *Simulator) newContextSim(child context.Context, deadline time.Time) context.Context {
+	ctx := &contextSim{
+		Context:  child,
+		done:     make(chan struct{}),
+		deadline: deadline,
+	}
+	t := s.newTimerFunc(deadline, nil)
+	go func() {
+		select {
+		case <-t.C:
+			ctx.err = context.DeadlineExceeded
+		case <-child.Done():
+			ctx.err = child.Err()
+			defer t.Stop()
+		}
+		close(ctx.done)
+	}()
+	return ctx
+}
+
 func (ctx *contextSim) Deadline() (time.Time, bool) {
 	return ctx.deadline, true
 }

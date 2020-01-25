@@ -9,13 +9,10 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-// TODO: 搜索锁的 test 文件夹中的 s.now 不能直接访问 s 的属性
-// 会有数据竞争问题
-
 func Test_Simulator_Sleep(t *testing.T) {
 	Convey("新建一个 Simulator s", t, func() {
 		now := time.Now()
-		duration := time.Second
+		duration := time.Millisecond
 		s := NewSimulator(now)
 		Convey("并发地 s.Sleep(duration) 与 s.Move()", func() {
 			go func() {
