@@ -164,11 +164,24 @@ func Test_ContextWithDeadline(t *testing.T) {
 	Convey("测试 ContextWithDeadline", t, func() {
 		ctx := context.Background()
 		Convey("返回值的类型应该符合预期", func() {
-			ctx, cancel := ContextWithDeadline(ctx, time.Now().Add(time.Second))
-			var expectCtx context.Context
-			So(ctx, ShouldHaveSameTypeAs, expectCtx)
-			var expectCancel context.CancelFunc
-			So(cancel, ShouldHaveSameTypeAs, expectCancel)
+			deadline := time.Now().Add(time.Second)
+			ctx, cancel := ContextWithDeadline(ctx, deadline)
+			eCtx, eCancel := context.WithDeadline(ctx, deadline)
+			So(ctx, ShouldHaveSameTypeAs, eCtx)
+			So(cancel, ShouldHaveSameTypeAs, eCancel)
+		})
+	})
+}
+
+func Test_ContextWithTimeout(t *testing.T) {
+	Convey("测试 ContextWithTimeout", t, func() {
+		ctx := context.Background()
+		Convey("返回值的类型应该符合预期", func() {
+			timeout := time.Second
+			aCtx, aCancel := ContextWithTimeout(ctx, timeout)
+			eCtx, eCancel := context.WithTimeout(ctx, timeout)
+			So(aCtx, ShouldHaveSameTypeAs, eCtx)
+			So(aCancel, ShouldHaveSameTypeAs, eCancel)
 		})
 	})
 }
