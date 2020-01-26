@@ -60,11 +60,14 @@ func (ctx *contextSim) Err() error {
 type clockKey struct{}
 
 // Set 把 Clock 放入 ctx 中
+// 这样的话，*Simulator 可以通过 Context 传递。
 func Set(ctx context.Context, c Clock) context.Context {
 	return context.WithValue(ctx, clockKey{}, c)
 }
 
 // Get 取出 ctx 中的 Clock
+// 为了简化从 Context 中取出 Clock 后的相关操作，
+// 对相关的操作进行了封装。
 func Get(ctx context.Context) Clock {
 	if c, ok := ctx.Value(clockKey{}).(Clock); ok {
 		return c

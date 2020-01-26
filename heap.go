@@ -14,17 +14,6 @@ type taskManager interface {
 
 type task struct {
 	deadline time.Time
-	// fire 是用来区分 task 的上级时 timer 还是 tick
-	// 当是 tick 的时候，返回 tick 周期，好计算下一个 tick 的时间。
-	// 但是，现在的实现方式，有一个大问题，
-	// 当 mock clock 的调整时间，大于 tick 的周期的时候，
-	// 只会触发 tick 一次，这明显与实际不符
-	// TODO: 删除此处内容
-	fire func() time.Duration
-	// TODO: 删除此处内容
-	// task 不必包含 mock 的内容。
-	// 由 mock 驱动 heap 的时候，丢弃 !isActive 的 task 就好了。
-	// mock *Mock
 	// tick 或 timer
 	// 在 Stop 之前，isStopped = true
 	// 在 Stop 之后，isStopped = false
