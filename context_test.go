@@ -127,9 +127,9 @@ func Test_Since(t *testing.T) {
 func Test_Sleep(t *testing.T) {
 	Convey("测试 Sleep", t, func() {
 		ctx := context.Background()
-		Convey("返回值的类型应该符合预期", func() {
+		Convey("的确休眠了那么长时间", func() {
 			dur := time.Millisecond * 10
-			delta := time.Millisecond
+			delta := time.Millisecond * 2
 			start := time.Now()
 			Sleep(ctx, dur)
 			end := time.Now()
