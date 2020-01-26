@@ -69,7 +69,6 @@ func Test_Simulator_AfterFunc(t *testing.T) {
 			count++
 			wg.Done()
 		})
-
 		Convey("到达预定时间前", func() {
 			s.Add(duration / 2)
 			Convey("Func 不会被触发", func() {
@@ -84,7 +83,6 @@ func Test_Simulator_AfterFunc(t *testing.T) {
 				So(isActive, ShouldBeTrue)
 			})
 		})
-
 		Convey("到达预定时间后", func() {
 			s.Add(duration)
 			wg.Wait()
@@ -106,6 +104,35 @@ func Test_Simulator_AfterFunc(t *testing.T) {
 				})
 			})
 		})
+	})
+}
 
+func Test_Simulator_NewTimer(t *testing.T) {
+	Convey("新建一个 Simulator s", t, func() {
+		now := time.Now()
+		duration := time.Second
+		s := NewSimulator(now)
+		timer := s.NewTimer(duration)
+		Convey("到期前，timer 是活的", func() {
+			isActive := timer.Stop()
+			So(isActive, ShouldBeTrue)
+		})
+		Convey("到期后，timer 是死的，并能接收到时间", func() {
+			deadline := now.Add(duration)
+			s.SetOrPanic(now.Add(duration * 2))
+			isActive := timer.Stop()
+			So(isActive, ShouldBeFalse)
+			if !isActive {
+				actual := <-timer.C
+				So(actual, ShouldEqual, deadline)
+			}
+			Convey("重置后，依然能接收到正确的时间", func() {
+				isActive := timer.Reset(duration)
+				So(isActive, ShouldBeFalse)
+				s.AddOrPanic(duration)
+				actual := <-timer.C
+				So(actual, ShouldEqual, s.Now())
+			})
+		})
 	})
 }

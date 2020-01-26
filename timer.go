@@ -54,7 +54,6 @@ func (s *Simulator) NewTimer(d time.Duration) *Timer {
 	return s.newTimerFunc(s.now.Add(d), nil)
 }
 
-//
 func (s *Simulator) newTimerFunc(deadline time.Time, afterFunc func()) *Timer {
 	c := make(chan time.Time, 1)
 	runTask := func(t *task) *task {
@@ -91,5 +90,3 @@ func (s *Simulator) newTimerFunc(deadline time.Time, afterFunc func()) *Timer {
 	}
 	return timer
 }
-
-func doNothing() {}
