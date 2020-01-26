@@ -18,7 +18,7 @@
 <!--  -->
 <a href="https://golang.google.cn"><img src="https://img.shields.io/github/go-mod/go-version/jujili/clock" alt="Go Version" title="Go Version"/></a>
 <!--  -->
-<a href="https://github.com/aQuaYi/jili/blob/master/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="MIT License" title="MIT License"/></a>
+<a href="https://github.com/jujili/clock/blob/master/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="MIT License" title="MIT License"/></a>
 <!--  -->
 <br/>
 <!--  -->
