@@ -33,35 +33,44 @@
 clock 中的 `realClock` 和 `simulator` 结构体，都实现了 `clock.Clock` 接口。需要实际时间时，使用前者；需要人为地操纵时间的场合（比如：测试）中，使用后者。
 
 - [总体思路](#%e6%80%bb%e4%bd%93%e6%80%9d%e8%b7%af)
+- [安装与更新](#%e5%ae%89%e8%a3%85%e4%b8%8e%e6%9b%b4%e6%96%b0)
 - [真实的 Clock](#%e7%9c%9f%e5%ae%9e%e7%9a%84-clock)
-- [虚拟的 Clock](#%e8%99%9a%e6%8b%9f%e7%9a%84-clock)
-- [小技巧](#%e5%b0%8f%e6%8a%80%e5%b7%a7)
+- [模拟的 Clock](#%e6%a8%a1%e6%8b%9f%e7%9a%84-clock)
 
 ## 总体思路
 
+在 `time` 和 `context` 标准库中，有一些函数和方法依赖于系统的当前时间。[`Clock`](https://github.com/jujili/clock/blob/master/interface.go#L13) 接口就是由这些内容组成。
+
 clock 模块分为真实与虚拟的两个部分。真实的部分是以 time 和 context 标准库为基础，封装成了 Clock 接口。
-然后，虚拟部分也实现了 Clock 接口，只是这一部分可以人为的操控时间的改变。
+虚拟部分也实现了 Clock 接口，只是这一部分可以人为的操控时间的改变。
+
+## 安装与更新
+
+在命令行中输入以下内容，可以获取到最新版
+
+```shell
+go get -u github.com/jujili/clock
+```
 
 ## 真实的 Clock
 
-`time.Now` 提供了计算机中的当前时间。`time` 标准库还有另外一些函数，需要用到 `time.Now` 提供的时间。比如，`time.Sleep` 是在当前时间的基础上，休眠一段时间。
+```go
+c := clock.NewRealClock()
 
-真实的 Clock 就是把 `time` 和 `context` 标准库中这些以当前时间为基础进行运算的函数，封装成了 `realClock` 的方法。
+// 输出操作系统的当前时间
+fmt.Println(c.Now())
+```
 
-代码全部放在 `real-*.go` 中。
+真实的 Clock 就是把 `time` 和 `context` 标准库中的相关函数，封装成了 `realClock` 的方法。
 
-## 虚拟的 Clock
+## 模拟的 Clock
 
-想要虚拟出时间流逝，其实光靠 `mockClock` 是不够的。还需要有
+```go
+now,_ := time.Parse("06-01-02", "20-01-26")
+c := clock.NewSimulator(now)
 
-- `mockTimer`：虚拟的计时器
-- `mockTicker`：虚拟的间隔器
-- `mockContext`：虚拟的上下文
+// 输出: 2020-01-26 00:00:00 +0000 UTC
+fmt.Println(c.Now())
+```
 
-随着时间的流逝，这三种对象需要在恰当的时间点进行触发。
-
-代码全部放在 `mock-*.go` 中。
-
-## 小技巧
-
-设置一个 ticker 到 mock 中，这样在 Mock.Set 的时候，会以 ticker 的周期为步进，跳到 Set 的时间点上，可以让 Mock 更像 time
+`*Simulator` 和 `contextSim` 虽然是模拟的。但是，实现了与 `time` 和 `context` 标准库中同名函数**一样的行为**。
