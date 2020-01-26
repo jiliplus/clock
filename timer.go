@@ -59,38 +59,37 @@ func (s *Simulator) newTimerFunc(deadline time.Time, afterFunc func()) *Timer {
 	c := make(chan time.Time, 1)
 	runTask := func(t *task) *task {
 		if afterFunc != nil {
+			// NOTICE: AfterFunc 创建的 *Timer 不会发送 current time
 			go afterFunc()
 		} else {
-			// 因为 time.Tick 的处理逻辑也是这样的
-			// 有人收就发过去, 每人接收就丢弃.
-			// NOTICE: AfterFunc 创建的 *Timer 不会发送 current time
-			select {
-			case c <- s.now:
-			default:
-			}
+			// Timer 的发送逻辑和 Tick 的不一样。
+			// 必须发送到位
+			c <- s.now
 		}
 		return nil
 	}
-	t := &Timer{
+	timer := &Timer{
 		C:    c,
 		task: newTask(deadline, runTask),
 	}
-	s.accept(t.task)
-	t.Stop = func() bool {
+	s.accept(timer.task)
+	timer.Stop = func() bool {
 		s.Lock()
 		defer s.Unlock()
-		isActive := !t.task.hasStopped()
-		s.heap.remove(t.task)
+		isActive := !timer.task.hasStopped()
+		s.heap.remove(timer.task)
 		return isActive
 	}
-	t.Reset = func(d time.Duration) bool {
+	timer.Reset = func(d time.Duration) bool {
 		s.Lock()
 		defer s.Unlock()
-		isActive := !t.hasStopped()
-		s.heap.remove(t.task)
-		t.deadline = s.now.Add(d)
-		s.accept(t.task)
+		isActive := !timer.hasStopped()
+		s.heap.remove(timer.task)
+		timer.deadline = s.now.Add(d)
+		s.accept(timer.task)
 		return isActive
 	}
-	return t
+	return timer
 }
+
+func doNothing() {}
