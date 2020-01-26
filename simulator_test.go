@@ -1,6 +1,7 @@
 package clock
 
 import (
+	"context"
 	"testing"
 	"time"
 
@@ -317,6 +318,98 @@ func Test_Simulator_setNowTo(t *testing.T) {
 			Convey("s.now 会被设置成新值", func() {
 				So(last.Before(s.now), ShouldBeTrue)
 				So(s.now, ShouldEqual, now)
+			})
+		})
+	})
+}
+
+func Test_Simulator_ContextWithDeadline(t *testing.T) {
+	// 把 cancel 赋值到 _ 是因为
+	// 它来至于 contest.WithCancel，我 100% 信任标准库
+	Convey("对于 Simulator 来说", t, func() {
+		now := time.Now()
+		s := NewSimulator(now)
+		ctx := context.Background()
+		deadline := now.Add(time.Second * 1)
+		Convey("放入 ctx", func() {
+			child, _ := s.ContextWithDeadline(ctx, deadline)
+			Convey("child 的 deadline 符合预期", func() {
+				actual, ok := child.Deadline()
+				So(actual, ShouldEqual, deadline)
+				So(ok, ShouldBeTrue)
+			})
+		})
+	})
+}
+
+func Test_Simulator_ContextWithTimeout(t *testing.T) {
+	// 把 cancel 赋值到 _ 是因为
+	// 它来至于 contest.WithCancel，我 100% 信任标准库
+	Convey("对于 Simulator 来说", t, func() {
+		now := time.Now()
+		s := NewSimulator(now)
+		ctx := context.Background()
+		timeout := time.Second
+		deadline := now.Add(timeout)
+		Convey("放入 ctx", func() {
+			child, _ := s.ContextWithTimeout(ctx, timeout)
+			Convey("child 的 deadline 符合预期", func() {
+				actual, ok := child.Deadline()
+				So(actual, ShouldEqual, deadline)
+				So(ok, ShouldBeTrue)
+			})
+		})
+	})
+}
+
+func Test_Simulator_contextWithDeadline(t *testing.T) {
+	// 把 cancel 赋值到 _ 是因为
+	// 它来至于 contest.WithCancel，我 100% 信任标准库
+	Convey("对于 Simulator 来说", t, func() {
+		now := time.Now()
+		s := NewSimulator(now)
+		ctxWithoutDeadline := context.Background()
+		oneSecondLater := now.Add(time.Second * 1)
+		twoSecondLater := now.Add(time.Second * 2)
+		threeSecondLater := now.Add(time.Second * 3)
+		Convey("如果放入 ctxWithoutDeadline", func() {
+			child, _ := s.contextWithDeadline(ctxWithoutDeadline, oneSecondLater)
+			Convey("child 应该是 *contextSim 类型", func() {
+				_, ok := child.(*contextSim)
+				So(ok, ShouldBeTrue)
+			})
+			Convey("child 的 deadline 符合预期", func() {
+				actual, ok := child.Deadline()
+				So(actual, ShouldEqual, oneSecondLater)
+				So(ok, ShouldBeTrue)
+			})
+		})
+		Convey("生成 ctxDeadTwoSecondLater", func() {
+			ctxDeadTwoSecondLater, cancel := context.WithDeadline(context.Background(), twoSecondLater)
+			defer cancel()
+			Convey("如果 child 的 deadline 更早", func() {
+				child, _ := s.contextWithDeadline(ctxDeadTwoSecondLater, oneSecondLater)
+				Convey("child 应该是 *contextSim 类型", func() {
+					_, ok := child.(*contextSim)
+					So(ok, ShouldBeTrue)
+				})
+				Convey("child 的 deadline 会在 1 秒后", func() {
+					actual, ok := child.Deadline()
+					So(actual, ShouldEqual, oneSecondLater)
+					So(ok, ShouldBeTrue)
+				})
+			})
+			Convey("如果 child 的 deadline 更晚", func() {
+				child, _ := s.contextWithDeadline(ctxDeadTwoSecondLater, threeSecondLater)
+				Convey("child 不应该是 *contextSim 类型", func() {
+					_, ok := child.(*contextSim)
+					So(ok, ShouldBeFalse)
+				})
+				Convey("child 的 deadline 会在 2 秒后", func() {
+					actual, ok := child.Deadline()
+					So(actual, ShouldEqual, twoSecondLater)
+					So(ok, ShouldBeTrue)
+				})
 			})
 		})
 	})

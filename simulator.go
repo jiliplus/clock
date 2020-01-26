@@ -139,6 +139,7 @@ func (s *Simulator) ContextWithTimeout(parent context.Context, timeout time.Dura
 }
 
 func (s *Simulator) contextWithDeadline(parent context.Context, deadline time.Time) (context.Context, context.CancelFunc) {
+	// 为 parent 注入 Simulator
 	child, cancel := context.WithCancel(Set(parent, s))
 	pd, ok := parent.Deadline()
 	pdEqualOrBeforeDeadline := !pd.After(deadline)
