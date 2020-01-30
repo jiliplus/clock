@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	. "github.com/golang/mock/gomock"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -61,10 +62,26 @@ func Test_Set_and_Get(t *testing.T) {
 func Test_After(t *testing.T) {
 	Convey("测试 After", t, func() {
 		ctx := context.Background()
-		Convey("返回值的类型应该符合预期", func() {
-			actual := After(ctx, time.Second)
-			expected := make(<-chan time.Time)
-			So(actual, ShouldHaveSameTypeAs, expected)
+		//
+		ctrl := NewController(t)
+		defer ctrl.Finish()
+		//
+		timeChan := make(chan time.Time, 1)
+		now := time.Now()
+		go func() {
+			timeChan <- now
+			close(timeChan)
+		}()
+		//
+		mockClock := NewMockClock(ctrl)
+		mockClock.EXPECT().After(Any()).Return(timeChan)
+		//
+		ctx = Set(ctx, mockClock)
+		//
+		Convey("应该返回特定的时间", func() {
+			actual, ok := <-After(ctx, time.Second)
+			So(actual, ShouldEqual, now)
+			So(ok, ShouldBeTrue)
 		})
 	})
 }
