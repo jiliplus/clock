@@ -26,7 +26,8 @@
 - `*Ticker` 实现了 `*time.Ticker` 一样的功能。由 `*Simulator` 生成的 `*Ticker` 可以由其驱动。
 - `*Timer` 实现了 `*time.Timer` 一样的功能。由 `*Simulator` 生成的 `*Timer` 可以由其驱动。
 
-[最新更改]: https://github.com/jujili/clock/compare/v0.1.0...HEAD
+[最新更改]: https://github.com/jujili/clock/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/jujili/clock/compare/v0.1.0...0.9.0
 [0.1.0]: https://github.com/jujili/clock/compare/v0.0.0...v0.1.0
 
 <!-- ### 添加 -->
