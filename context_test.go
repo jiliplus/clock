@@ -87,12 +87,22 @@ func Test_After(t *testing.T) {
 }
 
 func Test_AfterFunc(t *testing.T) {
-	Convey("测试 AfterFunc", t, func() {
+	Convey("测试 After", t, func() {
 		ctx := context.Background()
-		Convey("返回值的类型应该符合预期", func() {
-			actual := AfterFunc(ctx, time.Second, func() {})
-			expected := &Timer{}
-			So(actual, ShouldHaveSameTypeAs, expected)
+		//
+		ctrl := NewController(t)
+		defer ctrl.Finish()
+		//
+		timer := &Timer{}
+		//
+		mockClock := NewMockClock(ctrl)
+		mockClock.EXPECT().AfterFunc(Any(), Any()).Return(timer)
+		//
+		ctx = Set(ctx, mockClock)
+		//
+		Convey("应该返回特定的时间", func() {
+			actual := AfterFunc(ctx, time.Second, nil)
+			So(actual, ShouldEqual, timer)
 		})
 	})
 }
@@ -100,10 +110,20 @@ func Test_AfterFunc(t *testing.T) {
 func Test_NewTicker(t *testing.T) {
 	Convey("测试 NewTicker", t, func() {
 		ctx := context.Background()
+		//
+		ctrl := NewController(t)
+		defer ctrl.Finish()
+		//
+		ticker := &Ticker{}
+		//
+		mockClock := NewMockClock(ctrl)
+		mockClock.EXPECT().NewTicker(Any()).Return(ticker)
+		//
+		ctx = Set(ctx, mockClock)
+		//
 		Convey("返回值的类型应该符合预期", func() {
 			actual := NewTicker(ctx, time.Second)
-			expected := &Ticker{}
-			So(actual, ShouldHaveSameTypeAs, expected)
+			So(actual, ShouldEqual, ticker)
 		})
 	})
 }
@@ -111,10 +131,20 @@ func Test_NewTicker(t *testing.T) {
 func Test_NewTimer(t *testing.T) {
 	Convey("测试 NewTimer", t, func() {
 		ctx := context.Background()
+		//
+		ctrl := NewController(t)
+		defer ctrl.Finish()
+		//
+		timer := &Timer{}
+		//
+		mockClock := NewMockClock(ctrl)
+		mockClock.EXPECT().NewTimer(Any()).Return(timer)
+		//
+		ctx = Set(ctx, mockClock)
+		//
 		Convey("返回值的类型应该符合预期", func() {
 			actual := NewTimer(ctx, time.Second)
-			expected := &Timer{}
-			So(actual, ShouldHaveSameTypeAs, expected)
+			So(actual, ShouldEqual, timer)
 		})
 	})
 }
@@ -122,10 +152,20 @@ func Test_NewTimer(t *testing.T) {
 func Test_Now(t *testing.T) {
 	Convey("测试 Now", t, func() {
 		ctx := context.Background()
+		//
+		ctrl := NewController(t)
+		defer ctrl.Finish()
+		//
+		now := time.Now()
+		//
+		mockClock := NewMockClock(ctrl)
+		mockClock.EXPECT().Now().Return(now)
+		//
+		ctx = Set(ctx, mockClock)
+		//
 		Convey("返回值的类型应该符合预期", func() {
 			actual := Now(ctx)
-			expected := time.Now()
-			So(actual, ShouldHaveSameTypeAs, expected)
+			So(actual, ShouldEqual, now)
 		})
 	})
 }
@@ -133,10 +173,20 @@ func Test_Now(t *testing.T) {
 func Test_Since(t *testing.T) {
 	Convey("测试 Since", t, func() {
 		ctx := context.Background()
+		//
+		ctrl := NewController(t)
+		defer ctrl.Finish()
+		//
+		dur := time.Second
+		//
+		mockClock := NewMockClock(ctrl)
+		mockClock.EXPECT().Since(Any()).Return(dur)
+		//
+		ctx = Set(ctx, mockClock)
+		//
 		Convey("返回值的类型应该符合预期", func() {
 			actual := Since(ctx, time.Now())
-			expected := time.Second
-			So(actual, ShouldHaveSameTypeAs, expected)
+			So(actual, ShouldEqual, dur)
 		})
 	})
 }
@@ -158,10 +208,20 @@ func Test_Sleep(t *testing.T) {
 func Test_Tick(t *testing.T) {
 	Convey("测试 Tick", t, func() {
 		ctx := context.Background()
+		//
+		ctrl := NewController(t)
+		defer ctrl.Finish()
+		//
+		timeChan := make(<-chan time.Time)
+		//
+		mockClock := NewMockClock(ctrl)
+		mockClock.EXPECT().Tick(Any()).Return(timeChan)
+		//
+		ctx = Set(ctx, mockClock)
+		//
 		Convey("返回值的类型应该符合预期", func() {
 			actual := Tick(ctx, time.Second)
-			expected := make(<-chan time.Time)
-			So(actual, ShouldHaveSameTypeAs, expected)
+			So(actual, ShouldEqual, timeChan)
 		})
 	})
 }
@@ -169,10 +229,20 @@ func Test_Tick(t *testing.T) {
 func Test_Until(t *testing.T) {
 	Convey("测试 Until", t, func() {
 		ctx := context.Background()
+		//
+		ctrl := NewController(t)
+		defer ctrl.Finish()
+		//
+		dur := time.Second
+		//
+		mockClock := NewMockClock(ctrl)
+		mockClock.EXPECT().Until(Any()).Return(dur)
+		//
+		ctx = Set(ctx, mockClock)
+		//
 		Convey("返回值的类型应该符合预期", func() {
 			actual := Until(ctx, time.Now())
-			expected := time.Second
-			So(actual, ShouldHaveSameTypeAs, expected)
+			So(actual, ShouldEqual, dur)
 		})
 	})
 }
@@ -180,12 +250,22 @@ func Test_Until(t *testing.T) {
 func Test_ContextWithDeadline(t *testing.T) {
 	Convey("测试 ContextWithDeadline", t, func() {
 		ctx := context.Background()
+		//
+		ctrl := NewController(t)
+		defer ctrl.Finish()
+		//
+		var cancel context.CancelFunc
+		//
+		mockClock := NewMockClock(ctrl)
+		mockClock.EXPECT().ContextWithDeadline(Any(), Any()).Return(context.TODO(), cancel)
+		//
+		ctx = Set(ctx, mockClock)
+		//
 		Convey("返回值的类型应该符合预期", func() {
 			deadline := time.Now().Add(time.Second)
-			ctx, cancel := ContextWithDeadline(ctx, deadline)
-			eCtx, eCancel := context.WithDeadline(ctx, deadline)
-			So(ctx, ShouldHaveSameTypeAs, eCtx)
-			So(cancel, ShouldHaveSameTypeAs, eCancel)
+			actual, actualCancel := ContextWithDeadline(ctx, deadline)
+			So(actual, ShouldEqual, context.TODO())
+			So(actualCancel, ShouldEqual, cancel)
 		})
 	})
 }
@@ -193,12 +273,22 @@ func Test_ContextWithDeadline(t *testing.T) {
 func Test_ContextWithTimeout(t *testing.T) {
 	Convey("测试 ContextWithTimeout", t, func() {
 		ctx := context.Background()
+		//
+		ctrl := NewController(t)
+		defer ctrl.Finish()
+		//
+		var cancel context.CancelFunc
+		//
+		mockClock := NewMockClock(ctrl)
+		mockClock.EXPECT().ContextWithTimeout(Any(), Any()).Return(context.TODO(), cancel)
+		//
+		ctx = Set(ctx, mockClock)
+		//
 		Convey("返回值的类型应该符合预期", func() {
 			timeout := time.Second
-			aCtx, aCancel := ContextWithTimeout(ctx, timeout)
-			eCtx, eCancel := context.WithTimeout(ctx, timeout)
-			So(aCtx, ShouldHaveSameTypeAs, eCtx)
-			So(aCancel, ShouldHaveSameTypeAs, eCancel)
+			actual, actualCancel := ContextWithTimeout(ctx, timeout)
+			So(actual, ShouldEqual, context.TODO())
+			So(actualCancel, ShouldEqual, cancel)
 		})
 	})
 }
