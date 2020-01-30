@@ -36,6 +36,7 @@ clock 中的 `realClock` 和 `simulator` 结构体，都实现了 `clock.Clock` 
 - [安装与更新](#%e5%ae%89%e8%a3%85%e4%b8%8e%e6%9b%b4%e6%96%b0)
 - [真实的 Clock](#%e7%9c%9f%e5%ae%9e%e7%9a%84-clock)
 - [模拟的 Clock](#%e6%a8%a1%e6%8b%9f%e7%9a%84-clock)
+- [更新 mock](#%e6%9b%b4%e6%96%b0-mock)
 
 ## 总体思路
 
@@ -74,3 +75,12 @@ fmt.Println(c.Now())
 ```
 
 `*Simulator` 和 `contextSim` 虽然是模拟的。但是，实现了与 `time` 和 `context` 标准库中同名函数**一样的行为**。
+
+## 更新 mock
+
+在 clock 目录下，输入
+
+```shell
+$ mockgen -source=./interface.go -destination=./clock_mock_test.go -package=clock
+$
+```
