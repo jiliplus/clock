@@ -1,5 +1,5 @@
 <!-- markdownlint-disable MD041 -->
-<h1 align="center">:alarm_clock: Clock</h1>
+<h1 align="center">:timer_clock: Clock</h1>
 <p align="center">
 <!--  -->
 <a href="https://github.com/jujili/clock/releases"> <img src="https://img.shields.io/github/v/tag/jujili/clock?include_prereleases&sort=semver" alt="Release" title="Release"></a>
