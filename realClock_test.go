@@ -25,9 +25,9 @@ func Test_realClock_After(t *testing.T) {
 func Test_realClock_AfterFunc(t *testing.T) {
 	Convey("利用 realClock.AfterFunc 生成 *Timer", t, func() {
 		c := NewRealClock()
-		second := time.Second
+		secs := time.Second
 		var mutex sync.Mutex
-		timer := c.AfterFunc(second, func() {
+		timer := c.AfterFunc(secs, func() {
 			mutex.Lock()
 		})
 		Convey("立刻停止 timer 的话", func() {
@@ -38,21 +38,24 @@ func Test_realClock_AfterFunc(t *testing.T) {
 			Convey("func 未被执行，所以，可以上锁", func() {
 				So(func() {
 					mutex.Lock()
+					defer mutex.Unlock()
 				}, ShouldNotPanic)
 			})
 		})
 		Convey("立刻重置为两倍原来的时候的话", func() {
-			isActive := timer.Reset(second * 2)
+			isActive := timer.Reset(secs * 2)
 			Convey("timer 仍然是活的", func() {
 				So(isActive, ShouldBeTrue)
 			})
 			Convey("func 未被执行，所以，可以上锁", func() {
 				So(func() {
 					mutex.Lock()
+					defer mutex.Unlock()
 				}, ShouldNotPanic)
 			})
-			Convey("等待两倍的时间后", func() {
-				time.Sleep(second * 2)
+			Convey("超过 timer 的时限后", func() {
+				// * 110 / 100 是为了确保 timer 触发
+				time.Sleep(secs * 2 * 110 / 100)
 				Convey("func 已执行，此时可以解锁", func() {
 					So(func() {
 						mutex.Unlock()
@@ -60,8 +63,9 @@ func Test_realClock_AfterFunc(t *testing.T) {
 				})
 			})
 		})
-		Convey("等待一段时间后", func() {
-			time.Sleep(second)
+		Convey("超过 timer 的时限后", func() {
+			// * 110 / 100 是为了确保 timer 触发
+			time.Sleep(secs * 110 / 100)
 			Convey("func 已执行，此时可以解锁", func() {
 				So(func() {
 					mutex.Unlock()
@@ -132,8 +136,8 @@ func Test_realClock_Sleep(t *testing.T) {
 func Test_realClock_Tick(t *testing.T) {
 	Convey("新建一个 realClock", t, func() {
 		c := NewRealClock()
-		dur := time.Millisecond * 10
-		delta := time.Millisecond / 2
+		dur := time.Second
+		delta := dur / 10
 		start := time.Now()
 		end := <-c.Tick(dur)
 		Convey("起止时间，应该差不多就相差了一个 dur", func() {

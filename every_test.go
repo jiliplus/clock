@@ -16,9 +16,9 @@ func Test_nextDayTime(t *testing.T) {
 			now := time.Date(yyyy, mm, dd, h, m, s, ns, loc)
 			So(m, ShouldBeLessThan, 60)
 			Convey("则下一个时间点在当天", func() {
-				actual := nextDayTime(now, h, m, s)
-				m++
 				expected := now.Add(time.Minute)
+				m++
+				actual := nextDayTime(now, h, m, s)
 				So(actual, ShouldEqual, expected)
 			})
 		})
@@ -27,8 +27,8 @@ func Test_nextDayTime(t *testing.T) {
 			now := time.Date(yyyy, mm, dd, h, m, s, ns, loc)
 			So(m, ShouldBeGreaterThanOrEqualTo, 0)
 			Convey("则下一个时间点在下一天", func() {
-				actual := nextDayTime(now, h, m, s)
 				m--
+				actual := nextDayTime(now, h, m, s)
 				expected := now.Add(-time.Minute).Add(24 * time.Hour)
 				So(actual, ShouldEqual, expected)
 			})
