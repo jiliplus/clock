@@ -122,8 +122,8 @@ func Test_realClock_Since(t *testing.T) {
 func Test_realClock_Sleep(t *testing.T) {
 	Convey("新建一个 realClock", t, func() {
 		c := NewRealClock()
-		dur := time.Millisecond * 10
-		delta := time.Millisecond
+		dur := time.Millisecond * 100
+		delta := dur / 10
 		start := time.Now()
 		c.Sleep(dur)
 		end := time.Now()
@@ -162,7 +162,7 @@ func Test_realClock_ContextWithDeadline(t *testing.T) {
 	Convey("利用 realClock 创建 context", t, func() {
 		c := NewRealClock()
 		dur := time.Millisecond * 200
-		delta := time.Millisecond
+		delta := dur / 10
 		deadline := time.Now().Add(dur)
 		ctx, _ := c.ContextWithDeadline(context.Background(), deadline)
 		<-ctx.Done()
@@ -177,7 +177,7 @@ func Test_realClock_ContextWithTimeout(t *testing.T) {
 	Convey("利用 realClock 创建 context", t, func() {
 		c := NewRealClock()
 		timeout := time.Millisecond * 200
-		delta := time.Millisecond
+		delta := timeout / 10
 		deadline := time.Now().Add(timeout)
 		ctx, _ := c.ContextWithTimeout(context.Background(), timeout)
 		<-ctx.Done()

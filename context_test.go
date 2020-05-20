@@ -195,8 +195,8 @@ func Test_Sleep(t *testing.T) {
 	Convey("测试 Sleep", t, func() {
 		ctx := context.Background()
 		Convey("的确休眠了那么长时间", func() {
-			dur := time.Millisecond * 10
-			delta := time.Millisecond * 2
+			dur := time.Millisecond * 100
+			delta := dur / 10
 			start := time.Now()
 			Sleep(ctx, dur)
 			end := time.Now()
