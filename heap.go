@@ -19,22 +19,22 @@ type task struct {
 	// 在 Stop 之后，isStopped = false
 	// isStopped bool
 	// 用于替代 fire，
-	runTask func(t *task) *task
+	runFunc func(t *task) *task
 	index   int
 }
 
 const removed = -1
 
-func newTask(deadline time.Time, runTask func(t *task) *task) *task {
+func newTask(deadline time.Time, run func(t *task) *task) *task {
 	return &task{
 		deadline: deadline,
-		runTask:  runTask,
+		runFunc:  run,
 		index:    removed,
 	}
 }
 
 func (t *task) run() *task {
-	return t.runTask(t)
+	return t.runFunc(t)
 }
 
 func (t task) hasStopped() bool {
@@ -81,8 +81,7 @@ func (h taskHeap) Less(i, j int) bool {
 
 func (h taskHeap) Swap(i, j int) {
 	h[i], h[j] = h[j], h[i]
-	h[i].index = i
-	h[j].index = j
+	h[i].index, h[j].index = i, j
 }
 
 func (h *taskHeap) Push(x interface{}) {

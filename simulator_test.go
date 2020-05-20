@@ -268,7 +268,7 @@ func Test_Simulator_accept(t *testing.T) {
 		})
 		isRunned := false
 		ts := &task{}
-		ts.runTask = func(tk *task) *task {
+		ts.runFunc = func(tk *task) *task {
 			isRunned = true
 			return nil
 		}
