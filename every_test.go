@@ -45,3 +45,26 @@ func Test_nextDayTime(t *testing.T) {
 		})
 	})
 }
+
+func Test_Simulator_EveryDay(t *testing.T) {
+	Convey("当前时间是 2020-05-20 15:20:13.14", t, func() {
+		yyyy, mm, dd := 2020, time.Month(5), 20
+		h, m, s, ns := 15, 20, 13, 14
+		loc := time.Now().Location()
+		now := time.Date(yyyy, mm, dd, h, m, s, ns, loc)
+		clock := NewSimulator(now)
+		expected := time.Date(yyyy, mm, dd, 0, 0, 0, 0, loc)
+		Convey("每次返回的时间，都应该是当前的 0:00:0 ", func() {
+			days := time.Duration(5)
+			go func() {
+				clock.Set(now.Add(days * 24 * time.Hour))
+			}()
+			everyDayChan := clock.EveryDay(0, 0, 0)
+			for i := days; i > 0; i-- {
+				actual := <-everyDayChan
+				expected = expected.Add(24 * time.Hour)
+				So(actual, ShouldEqual, expected)
+			}
+		})
+	})
+}

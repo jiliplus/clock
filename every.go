@@ -1,6 +1,8 @@
 package clock
 
-import "time"
+import (
+	"time"
+)
 
 // nextDayTime 是为了 EveryDay 函数准备的
 // 是为了每天在 hour:minute:second 提供 tick
@@ -13,4 +15,23 @@ func nextDayTime(now time.Time, hour, minute, second int) time.Time {
 		return next
 	}
 	return next.Add(24 * time.Hour)
+}
+
+// EveryDay returns a channel which
+// output a time.Time by your setting
+func (s *Simulator) EveryDay(hour, minute, second int) <-chan time.Time {
+	s.Lock()
+	defer s.Unlock()
+	c := make(chan time.Time, 1)
+	run := func(t *task) *task {
+		select {
+		case c <- s.now:
+		default:
+		}
+		t.deadline = t.deadline.Add(24 * time.Hour)
+		return t
+	}
+	task := newTask(nextDayTime(s.now, hour, minute, second), run)
+	s.accept(task)
+	return c
 }
