@@ -24,10 +24,7 @@ func (s *Simulator) EveryDay(hour, minute, second int) <-chan time.Time {
 	defer s.Unlock()
 	c := make(chan time.Time, 1)
 	run := func(t *task) *task {
-		select {
-		case c <- s.now:
-		default:
-		}
+		c <- s.now // 必须要送达
 		t.deadline = t.deadline.Add(24 * time.Hour)
 		return t
 	}
