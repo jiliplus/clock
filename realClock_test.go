@@ -15,7 +15,7 @@ func Test_realClock_After(t *testing.T) {
 		Convey("after 应该在规定的时间内，触发", func() {
 			now := c.Now()
 			dur := time.Millisecond * 500
-			delta := time.Millisecond * 5
+			delta := dur / 10
 			after := <-c.After(dur)
 			So(after, ShouldHappenWithin, dur+delta, now)
 		})
