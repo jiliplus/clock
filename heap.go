@@ -14,10 +14,6 @@ type taskManager interface {
 
 type task struct {
 	deadline time.Time
-	// tick 或 timer
-	// 在 Stop 之前，isStopped = true
-	// 在 Stop 之后，isStopped = false
-	// isStopped bool
 	// 用于替代 fire，
 	runFunc func(t *task) *task
 	index   int
