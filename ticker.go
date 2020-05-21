@@ -50,8 +50,7 @@ func (s *Simulator) newTicker(d time.Duration) *Ticker {
 		return t
 	}
 	t := &Ticker{
-		C: c,
-		// TODO: EveryDay 与 NewTick 的区别就是这个初始 task 的起点时间不同。
+		C:    c,
 		task: newTask(s.now.Add(d), run),
 	}
 	t.Stop = func() {
